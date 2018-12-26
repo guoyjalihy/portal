@@ -1,11 +1,7 @@
 package com.common.portal.controller;
 
-import com.common.portal.model.News;
-import com.common.portal.model.NewsCategory;
-import com.common.portal.model.ResObject;
-import com.common.portal.service.NewsCategoryService;
+import com.common.portal.controller.vo.NewsVO;
 import com.common.portal.service.NewsService;
-import com.common.portal.util.Constant;
 import com.common.portal.util.PageUtil;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +24,8 @@ public class NewsController {
 	@Autowired
 	private NewsService newsService;
 
-	@Autowired
-	private NewsCategoryService newsCategoryService;
-	
-	
-	@RequestMapping("/admin/newsManage_{pageCurrent}_{pageSize}_{pageCount}")
-	public String newsManage(News news, @PathVariable Integer pageCurrent, @PathVariable Integer pageSize, @PathVariable Integer pageCount, Model model) {
+	@RequestMapping("/newsManage_{pageCurrent}_{pageSize}_{pageCount}")
+	public String newsManage(NewsVO news, @PathVariable Integer pageCurrent, @PathVariable Integer pageSize, @PathVariable Integer pageCount, Model model) {
 		
 		//判断
 		if(pageSize == 0) pageSize = 10;
@@ -44,19 +36,11 @@ public class NewsController {
 		//查询
 		news.setStart((pageCurrent - 1)*pageSize);
 		news.setEnd(pageSize);
-		if(news.getOrderBy()==null){news.setOrderBy(Constant.OrderByAddDateDesc);}
-		List<News> newsList = newsService.list(news);
-		
-		//文章分类
-		NewsCategory newsCategory = new NewsCategory();
-		newsCategory.setStart(0);
-		newsCategory.setEnd(Integer.MAX_VALUE);
-		List<NewsCategory> newsCategoryList = newsCategoryService.list(newsCategory);
-		
-		//输出
-		model.addAttribute("newsCategoryList", newsCategoryList);
+		List<NewsVO> newsList = newsService.list(news.getTitle(),news.getCategory());
+
+
 		model.addAttribute("newsList", newsList);
-		String pageHTML = PageUtil.getPageContent("newsManage_{pageCurrent}_{pageSize}_{pageCount}?title="+news.getTitle()+"&category="+news.getCategory()+"&commendState="+news.getCommendState()+"&orderBy="+news.getOrderBy(), pageCurrent, pageSize, pageCount);
+		String pageHTML = PageUtil.getPageContent("newsManage_{pageCurrent}_{pageSize}_{pageCount}?title="+news.getTitle()+"&category="+news.getCategory(), pageCurrent, pageSize, pageCount);
 		model.addAttribute("pageHTML",pageHTML);
 		model.addAttribute("news",news);
 		
@@ -66,34 +50,22 @@ public class NewsController {
 	
 	/**
 	 * 文章新增、修改跳转
-	 * @param model
-	 * @param news
 	 * @return
 	 */
-	@GetMapping("/admin/newsEdit")
-	public String newsEditGet(Model model,News news) {
-		NewsCategory newsCategory = new NewsCategory();
-		newsCategory.setStart(0);
-		newsCategory.setEnd(Integer.MAX_VALUE);
-		List<NewsCategory> newsCategoryList = newsCategoryService.list(newsCategory);
-		model.addAttribute("newsCategoryList",newsCategoryList);
-		if(news.getId()!=0){
-			News newT = newsService.findById(news);
-			model.addAttribute("news",newT);
-		}
+	@GetMapping("/newsEdit")
+	public String newsEditGet() {
 		return "news/newsEdit";
 	}
 	
 	/**
 	 * 文章新增、修改提交
-	 * @param model
 	 * @param news
 	 * @param imageFile
 	 * @param httpSession
 	 * @return
 	 */
-	@PostMapping("/admin/newsEdit")
-	public String newsEditPost(Model model,News news, @RequestParam MultipartFile[] imageFile,HttpSession httpSession) {
+	@PostMapping("/newsEdit")
+	public String newsEditPost(NewsVO news, @RequestParam MultipartFile[] imageFile,HttpSession httpSession) {
 		for (MultipartFile file : imageFile) {
 			if (file.isEmpty()) {
 				System.out.println("文件未上传");
@@ -107,46 +79,13 @@ public class NewsController {
 				System.out.println("realPath : "+realPath);
 				try {
 					FileUtils.copyInputStreamToFile(file.getInputStream(),new File(realPath, fileName));
-					news.setImage("/userfiles/"+fileName);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
 		}
-		if(news.getId()!=0){
-			newsService.update(news);
-		} else {
-			newsService.insert(news);
-		}
+		newsService.saveOrUpdate(news);
 		return "redirect:newsManage_0_0_0";
-	}
-	
-	@ResponseBody
-	@PostMapping("/admin/newsEditState")
-	public ResObject<Object> newsEditState(News news) {
-		News newsO = newsService.findById(news);
-		
-		if(news.getState()==0){
-			news.setState(newsO.getState());
-		}
-		if(news.getCommendState()==0){
-			news.setCommendState(newsO.getCommendState());
-		}
-		if(news.getBrowses()==0){
-			news.setBrowses(newsO.getBrowses());
-		}
-		if(news.getLikes()==0){
-			news.setLikes(newsO.getLikes());
-		}
-		if(news.getComments()==0){
-			news.setComments(newsO.getComments());
-		}
-		if(news.getScore()==0){
-			news.setScore(newsO.getScore());
-		}
-		newsService.updateState(news);
-		ResObject<Object> object = new ResObject<Object>(Constant.Code01, Constant.Msg01, null, null);
-		return object;
 	}
 	
 }

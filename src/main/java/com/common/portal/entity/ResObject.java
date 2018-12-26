@@ -1,4 +1,4 @@
-package com.common.portal.model;
+package com.common.portal.entity;
 
 import java.util.List;
 

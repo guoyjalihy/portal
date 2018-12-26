@@ -1,82 +1,66 @@
 package com.common.portal.service;
 
-import com.common.portal.model.News;
-import com.common.portal.util.Constant;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import com.common.portal.controller.vo.NewsVO;
+import com.common.portal.dao.NewsRepository;
+import com.common.portal.entity.News;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-@Mapper
-public interface NewsService {
-	
-	@Select("SELECT * FROM NEWS WHERE ID = #{id};")
-	News findById(News news);
-	
-	@Select({
-		"<script>",
-		"SELECT N.*,C.NAME AS CATEGORYNAME,C.IMAGE AS CATEGORYIMAGE FROM NEWS N ",
-		"LEFT JOIN NEWS_CATEGORY C ON N.CATEGORY = C.ID ",
-		"WHERE N.STATE = 1 ",
-			"<when test='title!=null'>",
-				"AND N.TITLE LIKE CONCAT('%',#{title},'%')",
-			"</when>",
-			"<when test='category!=0'>",
-				"AND category = #{category}",
-			"</when>",
-			"<when test='commendState!=0'>",
-				"AND commendState = #{commendState}",
-			"</when>",
-			"<when test='orderBy==\""+Constant.OrderByAddDateAsc+"\"'>",
-				"order by "+ Constant.OrderByAddDateAsc+",addDate desc",
-			"</when>",
-			"<when test='orderBy==\""+Constant.OrderByAddDateDesc+"\"'>",
-				"order by "+Constant.OrderByAddDateDesc,
-			"</when>",
-			"<when test='orderBy==\""+Constant.OrderByBrowsesDesc+"\"'>",
-				"order by "+Constant.OrderByBrowsesDesc+",addDate desc",
-			"</when>",
-			"<when test='orderBy==\""+Constant.OrderByCommentsDesc+"\"'>",
-				"order by "+Constant.OrderByCommentsDesc+",addDate desc",
-			"</when>",
-			"<when test='orderBy==\""+Constant.OrderByLikesDesc+"\"'>",
-				"order by "+Constant.OrderByLikesDesc+",addDate desc",
-			"</when>",
-			"<when test='orderBy==\""+Constant.OrderByScoreDesc+"\"'>",
-				"order by "+Constant.OrderByScoreDesc+",addDate desc",
-			"</when>",
-			"limit #{start},#{end}",
-		"</script>"
-	})
-	List<News> list(News news);
-	
-	@Select({
-		"<script>",
-		"SELECT COUNT(*) FROM NEWS N ",
-		"LEFT JOIN NEWS_CATEGORY C ON N.CATEGORY = C.ID ",
-		"WHERE N.STATE = 1 ",
-			"<when test='title!=null'>",
-				"AND N.TITLE LIKE CONCAT('%',#{title},'%')",
-			"</when>",
-			"<when test='category!=0'>",
-				"AND category = #{category}",
-			"</when>",
-			"<when test='commendState!=0'>",
-				"AND commendState = #{commendState}",
-			"</when>",
-		"</script>"
-	})
-	int count(News news);
-	
-	@Insert("INSERT INTO `news` (`id`,`title`,`description`,`category`,`image`,`content`,`addDate`,`updateDate`,`commendState`,`state`,`browses`,`likes`,`comments`,`score`) VALUES (null,#{title},#{description},#{category},#{image},#{content},now(),now(),1,1,0,0,0,0);")
-	int insert(News news);
+@Service
+public class NewsService {
+	@Autowired
+	NewsRepository newsRepository;
 
-	@Update("UPDATE `news` SET `title` = #{title}, `description` = #{description}, `category` = #{category}, `image` = #{image}, `content` = #{content}, `updateDate` = now()  WHERE `id` = #{id};")
-	int update(News news);
-	
-	@Update("UPDATE `news` SET `state` = #{state}, `commendState` = #{commendState}, `browses` = #{browses}, `likes` = #{likes}, `comments` = #{comments}, `score` = #{score} WHERE `id` = #{id};")
-	int updateState(News news);
-	
+	public NewsVO findById(News news){
+		NewsVO result = new NewsVO();
+		Optional<News> newsDB = newsRepository.findById(news.getId());
+		if (newsDB.get() != null){
+			result = buildVO(newsDB.get());
+		}
+		return  result;
+	}
+
+	public List<NewsVO> list(String title, String category){
+		List<News> news = newsRepository.findByTitleOrCategory(title,category);
+		List<NewsVO> result = new ArrayList<>();
+		news.forEach(obj -> {
+			NewsVO newsVO = buildVO(obj);
+			result.add(newsVO);
+		});
+		return result;
+	}
+
+	private NewsVO buildVO(News obj) {
+		NewsVO newsVO = new NewsVO();
+		newsVO.setAddDate(obj.getAddDate());
+		newsVO.setCategory(obj.getCategory());
+		newsVO.setDescription(obj.getCategory());
+		newsVO.setTitle(obj.getTitle());
+		newsVO.setId(obj.getId());
+		return newsVO;
+	}
+
+	private News buildEntity(NewsVO newsVO) {
+		News news = new News();
+		news.setAddDate(newsVO.getAddDate());
+		news.setCategory(newsVO.getCategory());
+		news.setDescription(newsVO.getCategory());
+		news.setTitle(newsVO.getTitle());
+		news.setId(newsVO.getId());
+		return news;
+	}
+
+
+	public int count(NewsVO news){
+		return Integer.valueOf(String.valueOf(newsRepository.countByTitleOrCategory(news.getTitle(),news.getCategory())));
+	}
+
+	public void saveOrUpdate(NewsVO newsVO) {
+		News news = buildEntity(newsVO);
+		newsRepository.saveAndFlush(news);
+	}
 }
