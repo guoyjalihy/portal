@@ -40,7 +40,7 @@ public class LoginController {
 	public String loginPost(UserVO userVO, Model model, HttpSession httpSession) {
 		User user = userService.findByNameAndPassword(userVO);
 		if (user != null) {
-			httpSession.setAttribute("user", user);
+			httpSession.setAttribute("user", userVO);
 			return "redirect:home";
 		} else {
 			model.addAttribute("error", "用户名或密码错误，请重新登录！");

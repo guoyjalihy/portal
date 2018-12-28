@@ -1,5 +1,6 @@
 package com.common.portal.filter;
 
+import com.common.portal.controller.vo.UserVO;
 import com.common.portal.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -40,7 +41,7 @@ public class SessionFilter implements Filter {
         }
 
         Object obj = request.getSession().getAttribute("user");
-        if (obj == null || !(obj instanceof User)) {
+        if (obj == null || !(obj instanceof UserVO)) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
