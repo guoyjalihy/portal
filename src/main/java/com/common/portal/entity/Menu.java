@@ -9,12 +9,12 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "menus")
+@Table(name = "menu")
 @Getter
 @Setter
 @ToString
 @Where(clause = "status=1")
-public class Menus {
+public class Menu {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -32,5 +32,5 @@ public class Menus {
 	private int status;
 	@OneToMany
 	@JoinColumn(name = "parent")
-	private List<Menus> subMenus;
+	private List<Menu> subMenus;
 }

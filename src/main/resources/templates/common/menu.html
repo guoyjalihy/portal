@@ -38,14 +38,14 @@
         <script type="text/javascript">
             var lastMenuId;
             function clickMenu(id,url){
-                $("#menu"+id).addClass("active");
-                $("#menu"+lastMenuId).removeClass("active");
+                $(".active").removeClass("active");
                 $.ajax({
                     type :"GET",
                     url : url,
                     dataType:"html",
                     success : function(data) {//返回数据根据结果进行相应的处理
                         $("#main").html(data);
+                        $("#menu"+id).addClass("active");
                         lastMenuId = id;
                     },
                     error:function(){

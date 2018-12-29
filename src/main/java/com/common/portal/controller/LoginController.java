@@ -66,7 +66,7 @@ public class LoginController {
 	 */
 	@PostMapping("/register")
 	public String register(UserVO userVO,Model model) {
-		userService.insert(userVO);
+		userService.saveOrUpdate(userVO);
 		model.addAttribute("msg", "注册成功，请重新登录！");
 		return "register";
 	}

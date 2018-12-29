@@ -1,0 +1,167 @@
+
+<div class="row wrapper border-bottom white-bg page-heading">
+	<div class="col-lg-10">
+		<h2>用户管理</h2>
+		<ol class="breadcrumb">
+			<li>
+				<a>系统设置</a>
+			</li>
+			<li class="active">
+				<strong>用户管理</strong>
+			</li>
+		</ol>
+	</div>
+	<div class="col-lg-2">
+	</div>
+</div>
+
+<div id="mainDiv" class="wrapper wrapper-content animated fadeInRight" th:fragment="mainDiv">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>搜索&amp;操作</h5>
+					<div class="ibox-tools">
+						<a class="collapse-link">
+							<i class="fa fa-chevron-up"></i>
+						</a>
+					</div>
+				</div>
+				<div class="ibox-content" style="display: block;">
+					<form action="user/search" method="post">
+						<div class="row">
+							<div class="col-sm-3 m-b-xs">
+								<input id="username" name="username" placeholder="用户名" class="form-control" type="text" th:value="${username}"/>
+							</div>
+							<div class="col-sm-2 m-b-xs">
+								<select name="role" id="role" class="form-control" >
+									<option value="" th:selected="${roleId==null}">--请选择角色--</option>
+									<option th:each="role:${roles}" th:value="${role.id}" th:selected="${role.id== roleId}" th:text="${role.name}"></option>
+								</select>
+							</div>
+							<div class="col-sm-2 m-b-xs">
+								<button class="btn btn-primary btn-block" type="button" onclick="search()"><i class="fa fa-search"></i>&nbsp;&nbsp;&nbsp;&nbsp;<strong>搜索</strong></button>
+							</div>
+						</div>
+					</form>
+					<div class="row">
+						<div class="col-sm-6 m-b-xs">
+							<a href="#"  onclick="add()" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="" data-original-title="Refresh inbox"><i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;新增用户&nbsp;&nbsp;&nbsp;&nbsp;</a>
+						</div>
+						<div class="col-sm-6 m-b-xs">
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>用户列表</h5>
+					<div class="ibox-tools">
+						<a class="collapse-link">
+							<i class="fa fa-chevron-up"></i>
+						</a>
+					</div>
+				</div>
+				<div class="ibox-content">
+					<div class="table-responsive">
+						<table id="usertable" class=" table table-hover" data-page-size="10" th:fragment="table">
+							<thead>
+							<tr>
+								<th width="5%">序号</th>
+								<th width="30%">用户名</th>
+								<th width="20%">密码</th>
+								<th width="20%">角色</th>
+								<th>操作</th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr th:each="user : ${users}" >
+								<td th:text="${user.id}">Onions</td>
+								<td th:text="${user.username}">Onions</td>
+								<td th:text="${user.password}">Onions</td>
+								<td th:text="${user.roleName}">Onions</td>
+								<td>
+									<a th:data-id=${user.id} th:onclick="edit(this.getAttribute('data-id'))" title="修改"><i class="fa fa-edit text-navy"></i></a>
+									&nbsp;&nbsp;&nbsp;&nbsp;
+									<a th:data-id=${user.id} th:onclick="del(this.getAttribute('data-id'));" title="删除"><i class="fa fa-trash-o text-navy"></i></a>
+								</td>
+							</tr>
+							</tbody>
+							<tfoot>
+							<tr>
+								<td colspan="7">
+									<ul id="pageHTML" class="pagination pull-right"></ul>
+								</td>
+							</tr>
+							</tfoot>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script th:src="@{/js/inspinia.js}"></script>
+<script th:inline="javascript">
+	function search(){
+	    var username = $("#username").val();
+	    var roleId = $("#role option:selected").val();
+	    var url = "/user/search";
+	    var param = {
+	        username: username,
+            roleId:roleId
+		}
+		$("#usertable").load(url,param);
+	}
+
+	function add(){
+        $.ajax({
+            type :"GET",
+            url : 'user/add',
+            dataType:"html",
+            success : function(data) {//返回数据根据结果进行相应的处理
+                $("#mainDiv").html(data);
+            },
+            error:function(){
+                $("#middle").html("获取数据失败！");
+            }
+		});
+	}
+
+    function edit(id){
+		$.ajax({
+			type: "GET",
+			url: "user/edit",
+            dataType:"html",
+			data:{
+			    id:id
+			},
+			success: function(data){
+                $("#mainDiv").html(data);
+			},
+			error: function(){
+				alert("系统异常！");
+			}
+		});
+	}
+
+    function del(id){
+        if (confirm("确定删除此条信息?")){
+            $.ajax({
+                type: "GET",
+                url: "user/del?id="+id,
+                contentType: "application/json; charset=utf-8",
+                success: function(msg){
+                    alert("删除成功！");
+                    window.location.reload();
+                },
+                error: function(){
+                    alert("系统异常！");
+                }
+            });
+		}
+	}
+</script>

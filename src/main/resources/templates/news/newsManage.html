@@ -1,5 +1,5 @@
 
-<div class="row wrapper border-bottom white-bg page-heading" th:fragment="headerNav">
+<div class="row wrapper border-bottom white-bg page-heading">
 	<div class="col-lg-10">
 		<h2>文章管理</h2>
 		<ol class="breadcrumb">
@@ -108,3 +108,11 @@
 		</div>
 	</div>
 </div>
+
+<script th:src="@{/js/inspinia.js}"></script>
+<script th:inline="javascript">
+    var pageHTML = [[${pageHTML}]];
+    $(document).ready(function () {
+        $("#pageHTML").html(pageHTML);
+    });
+ </script>
