@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8"/>
+<title>Insert title here</title>
+</head>
+<body>
+	<nav class="navbar-default navbar-static-side" role="navigation" th:fragment="navigation">
+        <div id="menus" class="sidebar-collapse">
+            <ul class="nav metismenu" id="side-menu">
+                <li class="nav-header">
+                    <div class="dropdown profile-element"> 
+                    	<span>
+                            <img alt="image" class="img-circle" th:src="@{/img/profile_small.jpg}" />
+						</span>
+                    	<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <span class="clear"> 
+                            	<span class="block m-t-xs">
+                            		<strong class="font-bold"  th:text="${session.user.username}"></strong>
+                             	</span> 
+                             </span>
+                     	</a>
+                    </div>
+                    <div class="logo-element">
+                        ADMIN
+                    </div>
+                </li>
+                <li  th:each="menu:${session.menus}" >
+                    <a th:if="${menu.url ne null}" th:id="|menu${menu.id}|"  th:href="${menu.url}" ><i th:class="|fa ${menu.image}|"></i> <span class="nav-label" th:text="${menu.name}"></span></a>
+                    <a th:if="${menu.url eq null}" th:id="|menu${menu.id}|"  th:href="${menu.url}" ><i th:class="|fa ${menu.image}|"></i> <span class="nav-label" th:text="${menu.name}"></span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse" th:if="${menu.subMenus ne null}" th:each="subMenu:${menu.subMenus}">
+                        <li><a th:id="|menu${subMenu.id}|" th:data-parent="${subMenu.parent}" th:href="${subMenu.url}" th:text="${subMenu.name}"></a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <script th:inline="javascript">
+            $(document).ready(function () {
+                $('#side-menu').metisMenu();
+                //获取div下面所有的a标签（返回节点对象）
+                var menus = document.getElementById("menus").getElementsByTagName("a");
+                //获取当前窗口的url
+                var myURL = document.location.href;
+                //循环div下面所有的链接，
+                for(var i=1;i<menus.length;i++){
+                    //获取每一个a标签的herf属性
+                    var parent = menus[i].getAttribute("data-parent");
+                    var links = menus[i].getAttribute("href");
+                    if(links == ""){
+                        continue;
+                    }
+                    if (parent == null && myURL.indexOf(links) != -1){
+                        menus[i].parentNode.className="active";
+                        break;
+                    }
+                    links = links.substr(0,links.lastIndexOf("/"));
+                    if(links == ""){
+                        continue;
+                    }
+                    if(myURL.indexOf(links) != -1){
+                        //查看div下的链接是否包含当前窗口，如果存在，则给其添加样式
+                        if (parent != null){
+                            var evt = document.createEvent("MouseEvents");
+                            evt.initEvent("click",true,true);
+                            document.getElementById("menu"+parent).dispatchEvent(evt);
+                        }
+                        menus[i].parentNode.className="active";
+                    }
+                }
+            })
+        </script>
+    </nav>
+
+</body>
+</html>
+
+
+

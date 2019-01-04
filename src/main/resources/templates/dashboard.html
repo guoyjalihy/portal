@@ -1,5 +1,12 @@
-
-<div id="main" th:fragment="main">
+<!DOCTYPE html> <html xmlns:th="http://www.thymeleaf.org"
+                      xmlns:layout="http://www.w3.org/1999/xhtml"
+                      layout:decorator="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>仪表盘</title>
+</head>
+<body>
+<div id="main" layout:fragment="main">
     <div class="row">
         <div class="col-lg-3">
             <div class="ibox float-e-margins">
@@ -130,7 +137,9 @@
                             <div>
                                 <small class="pull-right text-navy">1m ago</small>
                                 <strong>Monica Smith</strong>
-                                <div>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum</div>
+                                <div>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
+                                    Ipsum
+                                </div>
                                 <small class="text-muted">Today 5:60 pm - 12.06.2014</small>
                             </div>
                         </div>
@@ -154,7 +163,7 @@
                             <div>
                                 <small class="pull-right">5m ago</small>
                                 <strong>Monica Jackson</strong>
-                                <div>The generated Lorem Ipsum is therefore </div>
+                                <div>The generated Lorem Ipsum is therefore</div>
                                 <small class="text-muted">Yesterday 8:48 pm - 10.06.2014</small>
                             </div>
                         </div>
@@ -162,7 +171,7 @@
                             <div>
                                 <small class="pull-right">5m ago</small>
                                 <strong>Anna Legend</strong>
-                                <div>All the Lorem Ipsum generators on the Internet tend to repeat </div>
+                                <div>All the Lorem Ipsum generators on the Internet tend to repeat</div>
                                 <small class="text-muted">Yesterday 8:48 pm - 10.06.2014</small>
                             </div>
                         </div>
@@ -170,7 +179,7 @@
                             <div>
                                 <small class="pull-right">5m ago</small>
                                 <strong>Damian Nowak</strong>
-                                <div>The standard chunk of Lorem Ipsum used </div>
+                                <div>The standard chunk of Lorem Ipsum used</div>
                                 <small class="text-muted">Yesterday 8:48 pm - 10.06.2014</small>
                             </div>
                         </div>
@@ -223,46 +232,56 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td><small>Pending...</small></td>
+                                    <td>
+                                        <small>Pending...</small>
+                                    </td>
                                     <td><i class="fa fa-clock-o"></i> 11:20pm</td>
                                     <td>Samantha</td>
-                                    <td class="text-navy"> <i class="fa fa-level-up"></i> 24% </td>
+                                    <td class="text-navy"><i class="fa fa-level-up"></i> 24%</td>
                                 </tr>
                                 <tr>
-                                    <td><span class="label label-warning">Canceled</span> </td>
+                                    <td><span class="label label-warning">Canceled</span></td>
                                     <td><i class="fa fa-clock-o"></i> 10:40am</td>
                                     <td>Monica</td>
-                                    <td class="text-navy"> <i class="fa fa-level-up"></i> 66% </td>
+                                    <td class="text-navy"><i class="fa fa-level-up"></i> 66%</td>
                                 </tr>
                                 <tr>
-                                    <td><small>Pending...</small> </td>
+                                    <td>
+                                        <small>Pending...</small>
+                                    </td>
                                     <td><i class="fa fa-clock-o"></i> 01:30pm</td>
                                     <td>John</td>
-                                    <td class="text-navy"> <i class="fa fa-level-up"></i> 54% </td>
+                                    <td class="text-navy"><i class="fa fa-level-up"></i> 54%</td>
                                 </tr>
                                 <tr>
-                                    <td><small>Pending...</small> </td>
+                                    <td>
+                                        <small>Pending...</small>
+                                    </td>
                                     <td><i class="fa fa-clock-o"></i> 02:20pm</td>
                                     <td>Agnes</td>
-                                    <td class="text-navy"> <i class="fa fa-level-up"></i> 12% </td>
+                                    <td class="text-navy"><i class="fa fa-level-up"></i> 12%</td>
                                 </tr>
                                 <tr>
-                                    <td><small>Pending...</small> </td>
+                                    <td>
+                                        <small>Pending...</small>
+                                    </td>
                                     <td><i class="fa fa-clock-o"></i> 09:40pm</td>
                                     <td>Janet</td>
-                                    <td class="text-navy"> <i class="fa fa-level-up"></i> 22% </td>
+                                    <td class="text-navy"><i class="fa fa-level-up"></i> 22%</td>
                                 </tr>
                                 <tr>
-                                    <td><span class="label label-primary">Completed</span> </td>
+                                    <td><span class="label label-primary">Completed</span></td>
                                     <td><i class="fa fa-clock-o"></i> 04:10am</td>
                                     <td>Amelia</td>
-                                    <td class="text-navy"> <i class="fa fa-level-up"></i> 66% </td>
+                                    <td class="text-navy"><i class="fa fa-level-up"></i> 66%</td>
                                 </tr>
                                 <tr>
-                                    <td><small>Pending...</small> </td>
+                                    <td>
+                                        <small>Pending...</small>
+                                    </td>
                                     <td><i class="fa fa-clock-o"></i> 12:08am</td>
                                     <td>Damian</td>
-                                    <td class="text-navy"> <i class="fa fa-level-up"></i> 23% </td>
+                                    <td class="text-navy"><i class="fa fa-level-up"></i> 23%</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -354,7 +373,8 @@
                                             <td> Security doors
                                             </td>
                                             <td class="text-center small">16 Jun 2014</td>
-                                            <td class="text-center"><span class="label label-primary">$483.00</span></td>
+                                            <td class="text-center"><span class="label label-primary">$483.00</span>
+                                            </td>
 
                                         </tr>
                                         <tr>
@@ -362,7 +382,8 @@
                                             <td> Wardrobes
                                             </td>
                                             <td class="text-center small">10 Jun 2014</td>
-                                            <td class="text-center"><span class="label label-primary">$327.00</span></td>
+                                            <td class="text-center"><span class="label label-primary">$327.00</span>
+                                            </td>
 
                                         </tr>
                                         <tr>
@@ -370,26 +391,30 @@
                                             <td> Set of tools
                                             </td>
                                             <td class="text-center small">12 Jun 2014</td>
-                                            <td class="text-center"><span class="label label-warning">$125.00</span></td>
+                                            <td class="text-center"><span class="label label-warning">$125.00</span>
+                                            </td>
 
                                         </tr>
                                         <tr>
                                             <td class="text-center">4</td>
                                             <td> Panoramic pictures</td>
                                             <td class="text-center small">22 Jun 2013</td>
-                                            <td class="text-center"><span class="label label-primary">$344.00</span></td>
+                                            <td class="text-center"><span class="label label-primary">$344.00</span>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td class="text-center">5</td>
                                             <td>Phones</td>
                                             <td class="text-center small">24 Jun 2013</td>
-                                            <td class="text-center"><span class="label label-primary">$235.00</span></td>
+                                            <td class="text-center"><span class="label label-primary">$235.00</span>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td class="text-center">6</td>
                                             <td>Monitors</td>
                                             <td class="text-center small">26 Jun 2013</td>
-                                            <td class="text-center"><span class="label label-primary">$100.00</span></td>
+                                            <td class="text-center"><span class="label label-primary">$100.00</span>
+                                            </td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -405,8 +430,8 @@
         </div>
     </div>
 
-    <script>
-        $(document).ready(function() {
+    <script th:inline="javascript">
+        $(document).ready(function () {
 
             $('.chart').easyPieChart({
                 barColor: '#f8ac59',
@@ -453,7 +478,7 @@
                         show: true,
                         align: "center",
                         barWidth: 24 * 60 * 60 * 600,
-                        lineWidth:0
+                        lineWidth: 0
                     }
 
                 },
@@ -463,7 +488,7 @@
                     yaxis: 2,
                     color: "#1C84C6",
                     lines: {
-                        lineWidth:1,
+                        lineWidth: 1,
                         show: true,
                         fill: true,
                         fillColor: {
@@ -567,3 +592,5 @@
         });
     </script>
 </div>
+</body>
+</html>

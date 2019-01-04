@@ -20,14 +20,14 @@ public class HomeController {
     MenuService menuService;
 
 	@GetMapping({"/","/home"})
-	public String home(HttpSession httpSession,Model model) {
+	public String home(HttpSession httpSession) {
 		UserVO user = (UserVO) httpSession.getAttribute("user");
 		List<MenuVO> menus = menuService.findMenuTree();
-		model.addAttribute("user",user);
+		httpSession.setAttribute("user",user);
 		if (!CollectionUtils.isEmpty(menus)){
-			model.addAttribute("menus",menus.get(0).getSubMenus());
+			httpSession.setAttribute("menus",menus.get(0).getSubMenus());
 		}
-		return "home";
+		return "layout";
 	}
 
 	@GetMapping("/dashboard")
