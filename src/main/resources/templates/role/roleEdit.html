@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorator="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>角色管理</title>
+</head>
+<body>
+<div class="wrapper wrapper-content animated fadeInRight" layout:fragment="main">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5 th:text="${roleVO}?'修改用户':'新增用户'"></h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <form id="formTag" action="/role/doEdit" method="POST" class="form-horizontal" enctype="multipart/form-data">
+
+                        <input type="hidden" name="id" th:value="${roleVO}?${roleVO.id}:''" />
+
+                        <div class="form-group"><label class="col-sm-2 control-label">角色名：</label>
+                            <div class="col-sm-10">
+                                <input id="name" name="name" type="text" class="form-control" th:value="${roleVO}?${roleVO.name}:''"/>
+                            </div>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-2">
+                                <button id="submitButton" class="btn btn-primary" type="submit">&nbsp;&nbsp;&nbsp;&nbsp;提&nbsp;&nbsp;&nbsp;&nbsp;交&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        //提交
+        $("#submitButton").click(function(){
+            if($("#name").val() == ""){
+                toastr.error('请输入角色名','提示');
+                return;
+            }
+
+            $("#formTag").submit();
+        });
+    });
+</script>
+
+</body>
+</html>

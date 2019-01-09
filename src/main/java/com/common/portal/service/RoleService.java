@@ -47,11 +47,29 @@ public class RoleService {
 			return result;
 		}
 		roles.forEach(role -> {
-			RoleVO roleVO = new RoleVO();
-			roleVO.setId(role.getId());
-			roleVO.setName(role.getName());
-			result.add(roleVO);
+			result.add(buildVO(role));
 		});
 		return result;
+	}
+
+	private RoleVO buildVO(Role role) {
+		RoleVO roleVO = new RoleVO();
+		roleVO.setId(role.getId());
+		roleVO.setName(role.getName());
+		return roleVO;
+	}
+
+	public List<RoleVO> findByQuery(RoleVO roleVO) {
+		if (roleVO.getId() == 0){
+			return buildVOs(roleRepository.findAll());
+		}
+		Role role = roleRepository.findById(roleVO.getId()).get();
+		List<RoleVO> result = new ArrayList<>();
+		result.add(buildVO(role));
+		return result;
+	}
+
+	public void delById(Long id) {
+		roleRepository.deleteById(id);
 	}
 }

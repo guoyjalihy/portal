@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorator="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>菜单管理</title>
+</head>
+<body>
+<div class="wrapper wrapper-content animated fadeInRight" layout:fragment="main">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5 th:text="${menuVO}?'修改菜单':'新增菜单'"></h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <form id="formTag" action="/menu/doEdit" method="POST" class="form-horizontal" enctype="multipart/form-data">
+
+                        <input type="hidden" name="id" th:value="${menuVO}?${menuVO.id}:''" />
+
+                        <div class="form-group"><label class="col-sm-2 control-label">菜单名：</label>
+                            <div class="col-sm-10">
+                                <input id="name" name="name" type="text" class="form-control" th:value="${menuVO}?${menuVO.name}:''"/>
+                            </div>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group"><label class="col-sm-2 control-label">URL：</label>
+                            <div class="col-sm-10">
+                                <input id="url" name="url" type="text" class="form-control" th:value="${menuVO}?${menuVO.url}:''"/>
+                            </div>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group"><label class="col-sm-2 control-label">IMAGE：</label>
+                            <div class="col-sm-10">
+                                <select name="image" id="image" class="form-control" >
+                                    <option value="" th:selected="${image==null}">--请选择菜单样式--</option>
+                                    <option value="fa-desktop" th:selected="${menuVO.image eq 'fa-desktop'}">--fa-desktop--</option>
+                                    <option value="fa-bar-chart-o" th:selected="${menuVO.image eq 'fa-bar-chart-o'}">--fa-desktop--</option>
+                                    <option value="fa-envelope" th:selected="${menuVO.image eq 'fa-envelope'}">--fa-envelope--</option>
+                                    <option value="fa-edit" th:selected="${menuVO.image eq 'fa-edit'}">--fa-edit--</option>
+                                    <option value="fa-files-o" th:selected="${menuVO.image eq 'fa-files-o'}">--fa-files-o--</option>
+                                    <option value="fa-globe" th:selected="${menuVO.image eq 'fa-globe'}">--fa-globe--</option>
+                                    <option value="fa-shopping-cart" th:selected="${menuVO.image eq 'fa-shopping-cart'}">--fa-shopping-cart--</option>
+                                    <option value="fa-diamond" th:selected="${menuVO.image eq 'fa-diamond'}">--fa-diamond--</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group"><label class="col-sm-2 control-label">级别：</label>
+                            <div class="col-sm-10">
+                                <select name="level" id="level" class="form-control" >
+                                    <option value="" th:selected="${level==null}">--请选择级别--</option>
+                                    <option value="1" th:selected="${menuVO}?${menuVO.level==1}:false">一级菜单</option>
+                                    <option value="2" th:selected="${menuVO}?${menuVO.level==2}:false">二级菜单</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+
+                        <div id="parentDIV" class="form-group" style="display: none"><label class="col-sm-2 control-label">上一级菜单：</label>
+                            <div class="col-sm-10">
+                                <select name="parent" id="parent" class="form-control" >
+                                    <option value="0" th:selected="${parent==null}">--请选择上一级菜单--</option>
+                                    <option th:each="menu : ${menus}" th:value="${menu.id}" th:text="${menu.name}" th:selected="${menuVO}?${menu.id== menuVO.parent}:false">菜单</option>
+                                </select>
+                            </div>
+                        </div>
+                        <script th:inline="javascript">
+                            $(document).ready(function () {
+                                $("#level").change(function(){
+                                    var level = $("#level").val();
+                                    if (level == 2){
+                                        $("#parentDIV").show();
+                                    }else {
+                                        $("#parentDIV").hide();
+                                    }
+                                });
+
+                                //提交
+                                $("#submitButton").click(function(){
+                                    if($("#name").val() == ""){
+                                        toastr.error('请输入名称','提示');
+                                        return;
+                                    }
+                                    var level = $("#level").val();
+                                    var parent = $("#parent").val();
+                                    if (level == 2 && parent == null){
+                                        toastr.error('请选择上一级菜单','提示');
+                                        return;
+                                    }
+                                    $("#formTag").submit();
+                                });
+                            })
+                        </script>
+
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-2">
+                                <button id="submitButton" class="btn btn-primary" type="submit">&nbsp;&nbsp;&nbsp;&nbsp;提&nbsp;&nbsp;&nbsp;&nbsp;交&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

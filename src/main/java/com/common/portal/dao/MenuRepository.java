@@ -7,4 +7,8 @@ import java.util.List;
 
 public interface MenuRepository extends JpaRepository<Menu, Long> {
     List<Menu> findByLevel(int level);
+
+    List<Menu> findByIdOrNameOrLevel(Long id, String name, int level);
+
+    void deleteAllByParentOrId(Long parent,Long id);
 }

@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
+@Transactional
 public class MenuService {
 
 	@Autowired
@@ -69,5 +71,40 @@ public class MenuService {
 			result.add(buildVO(menu));
 		});
 		return result;
+	}
+
+	public MenuVO findById(Long menuId) {
+		Menu menu = menuRepository.findById(menuId).get();
+		if (menu == null){
+			return null;
+		}
+		return buildVO(menu);
+	}
+
+	public List<MenuVO> findByQuery(MenuVO menuVO) {
+		List<Menu> menus = menuRepository.findByIdOrNameOrLevel(menuVO.getId(),menuVO.getName(),menuVO.getLevel());
+		if (CollectionUtils.isEmpty(menus)){
+			return new ArrayList<>();
+		}
+		return buildVOs(menus);
+	}
+
+	private List<MenuVO> buildVOs(List<Menu> menus) {
+		if (CollectionUtils.isEmpty(menus)){
+			return new ArrayList<>();
+		}
+		List<MenuVO> result = new ArrayList<>();
+		menus.forEach(menu -> {
+			result.add(buildVO(menu));
+		});
+		return result;
+	}
+
+	public void delById(Long id) {
+		menuRepository.deleteById(id);
+	}
+
+	public void deleteAllByParentOrId(Long id) {
+		menuRepository.deleteAllByParentOrId(id,id);
 	}
 }

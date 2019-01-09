@@ -76,7 +76,7 @@ public class LoginController {
 	 * @param httpSession
 	 * @return
 	 */
-	@GetMapping("/logout")
+	@GetMapping("logout")
 	public String logout(HttpSession httpSession) {
 		httpSession.removeAttribute("user");
 		return "login";

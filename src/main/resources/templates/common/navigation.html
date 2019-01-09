@@ -2,132 +2,45 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-<meta charset="UTF-8"/>
-<title>Insert title here</title>
+    <meta charset="UTF-8"/>
+    <title>Insert title here</title>
 </head>
 <body>
-	<nav class="navbar-default navbar-static-side" role="navigation" th:fragment="navigation">
-        <div class="sidebar-collapse" >
-            <ul class="nav metismenu" id="side-menu">
-                <li class="nav-header">
-                    <div class="dropdown profile-element"> 
+<nav class="navbar-default navbar-static-side" role="navigation" th:fragment="navigation">
+    <div id="menus" class="sidebar-collapse">
+        <ul class="nav metismenu" id="side-menu">
+            <li class="nav-header">
+                <div class="dropdown profile-element">
                     	<span>
                             <img alt="image" class="img-circle" th:src="@{/img/profile_small.jpg}" />
 						</span>
-                    	<a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <span class="clear"> 
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <span class="clear">
                             	<span class="block m-t-xs">
                             		<strong class="font-bold"  th:text="${session.user.username}"></strong>
-                             	</span> 
+                             	</span>
                              </span>
-                     	</a>
-                    </div>
-                    <div class="logo-element">
-                        ADMIN
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <script th:inline="javascript">
-            function set_cache(key,value){
-                if(key=='') return false;
-                localStorage.setItem(key, value);
-            }
-            //读取缓存
-            function get_cache(key){
-                return localStorage.getItem(key);
-            }
-
-            function del_cache(key){
-                return localStorage.removeItem(key);
-            }
-
-            $(document).ready(function () {
-                // del_cache("menuCache");
-                var menuCache = get_cache("menuCache");
-                if (menuCache != null){
-                    $("#side-menu").append(menuCache) ;
-                    $('#side-menu').metisMenu();
-                    highlightMenu();
-                    return false;
-                }
-                alert(1);
-                var menus = [[${session.menus}]];
-                for(var  i = 0;i < menus.length;i++ ){
-                    menuCache += "<li><a id='menu";
-                    menuCache += menus[i].id;
-                    menuCache += "' href='";
-                    if (menus[i].url == null) {
-                        menuCache += "javascript:void(0)";
-                    }else{
-                        menuCache += menus[i].url;
-                    }
-                    menuCache += "'><i class='fa ";
-                    menuCache += menus[i].image;
-                    menuCache += "'></i><span class='nav-label'>";
-                    menuCache += menus[i].name;
-                    if (menus[i].url == null){
-                        menuCache += "</span><span class='fa arrow'></span>";
-                    }
-                    menuCache += "</a>";
-                    var submenus = menus[i].subMenus;
-                    if(submenus != null){
-                        for(var  j = 0;j < submenus.length;j++ ){
-                            menuCache += "<ul class='nav nav-second-level collapse'> <li><a id='menu";
-                            menuCache += submenus[j].id;
-                            menuCache += "' data-parent='";
-                            menuCache += submenus[j].parent;
-                            menuCache += "' href='";
-                            menuCache += submenus[j].url;
-                            menuCache += "' >";
-                            menuCache += submenus[j].name;
-                            menuCache += "</a></li></ul>";
-                        }
-                    }
-                    menuCache += "</li>";
-                }
-                $("#side-menu").append(menuCache) ;
-                set_cache("menuCache",menuCache);
-                $('#side-menu').metisMenu();
-
-                highlightMenu();
-                set_cache("menuCache",menuCache);
-            })
-
-            function highlightMenu() {
-                //获取div下面所有的a标签（返回节点对象）
-                var menus = document.getElementById("side-menu").getElementsByTagName("a");
-                //获取当前窗口的url
-                var myURL = document.location.href;
-                for (var i = 1; i < menus.length; i++) {
-                    //获取每一个a标签的herf属性
-                    var parent = menus[i].getAttribute("data-parent");
-                    var links = menus[i].getAttribute("href");
-                    if (links == "") {
-                        continue;
-                    }
-                    if (parent == null && myURL.indexOf(links) != -1) {
-                        menus[i].parentNode.className = "active";
-                        break;
-                    }
-                    links = links.substr(0, links.lastIndexOf("/"));
-                    if (links == "") {
-                        continue;
-                    }
-                    if (myURL.indexOf(links) != -1) {
-                        //查看div下的链接是否包含当前窗口，如果存在，则给其添加样式
-                        if (parent != null) {
-                            var evt = document.createEvent("MouseEvents");
-                            evt.initEvent("click", true, true);
-                            document.getElementById("menu" + parent).dispatchEvent(evt);
-                        }
-                        menus[i].parentNode.className = "active";
-                    }
-                }
-            }
-
-        </script>
-    </nav>
+                    </a>
+                </div>
+                <div class="logo-element">
+                    ADMIN
+                </div>
+            </li>
+            <li  th:each="menu:${session.menus}" th:with="isOpen=${session.currMenu}?${session.currMenu.parent == menu.id || session.currMenu.id == menu.id }:false" th:class="${isOpen}?active:''">
+                <a th:if="!${#strings.isEmpty(menu.url)}" th:id="|menu${menu.id}|"  th:href="|${menu.url}?menuId=${menu.id}|" ><i th:class="|fa ${menu.image}|"></i> <span class="nav-label" th:text="${menu.name}"></span></a>
+                <a th:if="${#strings.isEmpty(menu.url)}" th:id="|menu${menu.id}|"  ><i th:class="|fa ${menu.image}|"></i> <span class="nav-label" th:text="${menu.name}"></span><span class="fa arrow"></span></a>
+                <ul th:class="|nav nav-second-level collapse ${isOpen}?in:''|" th:if="${menu.subMenus ne null}" th:each="subMenu:${menu.subMenus}">
+                    <li th:with="isActive=${session.currMenu}?${session.currMenu.id == subMenu.id}:false" th:class="${isActive}?active:''"><a th:id="|menu${subMenu.id}|" th:data-parent="${subMenu.parent}" th:href="|${subMenu.url}?menuId=${subMenu.id}|" th:text="${subMenu.name}"></a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            $('#side-menu').metisMenu();
+        })
+    </script>
+</nav>
 
 </body>
 </html>

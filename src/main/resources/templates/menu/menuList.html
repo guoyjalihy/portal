@@ -4,19 +4,19 @@
       layout:decorator="~{layout}">
 <head>
     <meta charset="UTF-8">
-    <title>用户管理</title>
+    <title>菜单管理</title>
 </head>
 <body>
 <div layout:fragment="main">
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-lg-10">
-            <h2>用户管理</h2>
+            <h2>菜单管理</h2>
             <ol class="breadcrumb">
                 <li>
                     <a>系统设置</a>
                 </li>
                 <li class="active">
-                    <strong>用户管理</strong>
+                    <strong>菜单管理</strong>
                 </li>
             </ol>
         </div>
@@ -37,18 +37,23 @@
                         </div>
                     </div>
                     <div class="ibox-content" style="display: block;">
-                        <form action="/user/search" method="post">
+                        <form action="/menu/search" method="post">
                             <div class="row">
                                 <div class="col-sm-3 m-b-xs">
-                                    <input id="username" name="username" placeholder="用户名" class="form-control"
+                                    <input id="id" name="id" placeholder="菜单ID" class="form-control"
                                            type="text"
-                                           th:value="${userVO}?${userVO.username}:''"/>
+                                           th:value="${menuVO}?${menuVO.id}:''"/>
+                                </div>
+                                <div class="col-sm-3 m-b-xs">
+                                    <input id="name" name="name" placeholder="菜单名" class="form-control"
+                                           type="text"
+                                           th:value="${menuVO}?${menuVO.name}:''"/>
                                 </div>
                                 <div class="col-sm-2 m-b-xs">
-                                    <select name="roleId" id="roleId" class="form-control">
-                                        <option value="" th:selected="${roleId==null}">--请选择角色--</option>
-                                        <option th:each="role:${session.roles}" th:value="${role.id}"
-                                                th:selected="${userVO}?${role.id== userVO.roleId}:false" th:text="${role.name}"></option>
+                                    <select name="level" id="level" class="form-control">
+                                        <option value="0" th:selected="${level==null}">--请选择级别--</option>
+                                        <option value="1" th:selected="${menuVO}?${menuVO.level==1}:false">一级菜单</option>
+                                        <option value="2" th:selected="${menuVO}?${menuVO.level==2}:false">二级菜单</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-2 m-b-xs">
@@ -60,9 +65,9 @@
                         </form>
                         <div class="row">
                             <div class="col-sm-6 m-b-xs">
-                                <a href="/user/add"  class="btn btn-white btn-sm" data-toggle="tooltip"
+                                <a href="/menu/add"  class="btn btn-white btn-sm" data-toggle="tooltip"
                                    data-placement="left" title="" data-original-title="Refresh inbox"><i
-                                        class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;新增用户&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                                        class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;新增菜单&nbsp;&nbsp;&nbsp;&nbsp;</a>
                             </div>
                             <div class="col-sm-6 m-b-xs">
                             </div>
@@ -74,7 +79,7 @@
             <div class="col-lg-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <h5>用户列表</h5>
+                        <h5>菜单列表</h5>
                         <div class="ibox-tools">
                             <a class="collapse-link">
                                 <i class="fa fa-chevron-up"></i>
@@ -87,24 +92,28 @@
                                 <thead>
                                 <tr>
                                     <th width="5%">序号</th>
-                                    <th width="30%">用户名</th>
-                                    <th width="20%">密码</th>
-                                    <th width="20%">角色</th>
+                                    <th width="10%">菜单名</th>
+                                    <th width="20%">URL</th>
+                                    <th width="20%">IMAGE</th>
+                                    <th width="10%">级别</th>
+                                    <th width="20%">上一级菜单</th>
                                     <th>操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:each="user : ${users}">
-                                    <td th:text="${user.id}">Onions</td>
-                                    <td th:text="${user.username}">Onions</td>
-                                    <td th:text="${user.password}">Onions</td>
-                                    <td th:text="${user.roleName}">Onions</td>
+                                <tr th:each="menu : ${menus}" th:if="${menu.name ne 'root'}">
+                                    <td th:text="${menu.id}">Onions</td>
+                                    <td th:text="${menu.name}">Onions</td>
+                                    <td th:text="${menu.url}">Onions</td>
+                                    <td th:text="${menu.image}">Onions</td>
+                                    <td th:text="${menu.level}">Onions</td>
+                                    <td th:text="${menu.parent}">Onions</td>
                                     <td>
-                                        <a th:href="|/user/edit?id=${user.id}|"
+                                        <a th:href="|/menu/edit?id=${menu.id}|"
                                            title="修改"><i
                                                 class="fa fa-edit text-navy"></i></a>
                                         &nbsp;&nbsp;&nbsp;&nbsp;
-                                        <a th:onclick="'del('+${user.id}+')'"
+                                        <a th:onclick="'del('+${menu.id}+','+${menu.level}+')'"
                                            title="删除"><i
                                                 class="fa fa-trash-o text-navy"></i></a>
                                     </td>
@@ -118,11 +127,15 @@
         </div>
     </div>
     <script>
-        function del(id) {
-            if (confirm("确定删除此条信息?")) {
+        function del(id,level) {
+            var msg = "确定删除此条信息?";
+            if (level == 1){
+                msg = "同时删除所有子菜单，确认删除吗？"
+            }
+            if (confirm(msg)) {
                 $.ajax({
                     type: "GET",
-                    url: "/user/del?id=" + id,
+                    url: "/menu/del?id=" + id,
                     dataType: "text",
                     success: function (msg) {
                         alert("删除成功！");
