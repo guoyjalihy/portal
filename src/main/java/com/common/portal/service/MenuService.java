@@ -2,6 +2,7 @@ package com.common.portal.service;
 
 import com.common.portal.controller.vo.MenuVO;
 import com.common.portal.dao.MenuRepository;
+import com.common.portal.dao.PrivilegeRepository;
 import com.common.portal.entity.Menu;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,9 +17,11 @@ public class MenuService {
 
 	@Autowired
 	MenuRepository menuRepository;
+	@Autowired
+	PrivilegeService privilegeService;
 
-	public List<MenuVO> findMenuTree(){
-		List<Menu> menus = menuRepository.findByLevel(0);
+	public List<MenuVO> findAllMenuTree(){
+		List<Menu> menus = menuRepository.findAll();
 		if (CollectionUtils.isEmpty(menus)){
 			return new ArrayList<>();
 		}
@@ -26,15 +29,19 @@ public class MenuService {
 	}
 
 	private List<MenuVO> buildVOsToTree(List<Menu> menus) {
-		List<MenuVO> result = new ArrayList<>();
+		Map<Long,MenuVO> map = new HashMap<>();
 		menus.forEach(menu -> {
-			MenuVO menuVO = buildVO(menu);
-			if (!CollectionUtils.isEmpty(menu.getSubMenus())){
-				menuVO.setSubMenus(buildVOsToTree(menu.getSubMenus()));
+			if (menu.getLevel() == 1){
+				MenuVO menuVO = buildVO(menu);
+				map.put(menu.getId(),menuVO);
 			}
-			result.add(menuVO);
 		});
-		return result;
+		menus.forEach(menu -> {
+			if (menu.getLevel() == 2) {
+				map.get(menu.getParent()).getSubMenus().add(buildVO(menu));
+			}
+		});
+		return new ArrayList<>(map.values());
 	}
 
 	private MenuVO buildVO(Menu menu) {
@@ -100,11 +107,18 @@ public class MenuService {
 		return result;
 	}
 
-	public void delById(Long id) {
-		menuRepository.deleteById(id);
-	}
 
 	public void deleteAllByParentOrId(Long id) {
 		menuRepository.deleteAllByParentOrId(id,id);
+	}
+
+	public List<MenuVO> findByIds(List<Long> menuIds) {
+		List<Menu> menus = menuRepository.findAllById(menuIds);
+		return buildVOs(menus);
+	}
+
+	public List<MenuVO> findMenuTreeByRoleId(Long roleId) {
+		List<Long> menuIds = privilegeService.findMenuIdsByRoleId(roleId);
+		return buildVOsToTree(menuRepository.findAllById(menuIds));
 	}
 }

@@ -44,14 +44,14 @@
                             <div class="col-sm-10">
                                 <select name="image" id="image" class="form-control" >
                                     <option value="" th:selected="${image==null}">--请选择菜单样式--</option>
-                                    <option value="fa-desktop" th:selected="${menuVO.image eq 'fa-desktop'}">--fa-desktop--</option>
-                                    <option value="fa-bar-chart-o" th:selected="${menuVO.image eq 'fa-bar-chart-o'}">--fa-desktop--</option>
-                                    <option value="fa-envelope" th:selected="${menuVO.image eq 'fa-envelope'}">--fa-envelope--</option>
-                                    <option value="fa-edit" th:selected="${menuVO.image eq 'fa-edit'}">--fa-edit--</option>
-                                    <option value="fa-files-o" th:selected="${menuVO.image eq 'fa-files-o'}">--fa-files-o--</option>
-                                    <option value="fa-globe" th:selected="${menuVO.image eq 'fa-globe'}">--fa-globe--</option>
-                                    <option value="fa-shopping-cart" th:selected="${menuVO.image eq 'fa-shopping-cart'}">--fa-shopping-cart--</option>
-                                    <option value="fa-diamond" th:selected="${menuVO.image eq 'fa-diamond'}">--fa-diamond--</option>
+                                    <option value="fa-desktop" th:selected="${menuVO}?${menuVO.image eq 'fa-desktop'}:false">--fa-desktop--</option>
+                                    <option value="fa-bar-chart-o" th:selected="${menuVO}?${menuVO.image eq 'fa-bar-chart-o'}:false">--fa-desktop--</option>
+                                    <option value="fa-envelope" th:selected="${menuVO}?${menuVO.image eq 'fa-envelope'}:false">--fa-envelope--</option>
+                                    <option value="fa-edit" th:selected="${menuVO}?${menuVO.image eq 'fa-edit'}:false">--fa-edit--</option>
+                                    <option value="fa-files-o" th:selected="${menuVO}?${menuVO.image eq 'fa-files-o'}:false">--fa-files-o--</option>
+                                    <option value="fa-globe" th:selected="${menuVO}?${menuVO.image eq 'fa-globe'}:false">--fa-globe--</option>
+                                    <option value="fa-shopping-cart" th:selected="${menuVO}?${menuVO.image eq 'fa-shopping-cart'}:false">--fa-shopping-cart--</option>
+                                    <option value="fa-diamond" th:selected="${menuVO}?${menuVO.image eq 'fa-diamond'}:false">--fa-diamond--</option>
                                 </select>
                             </div>
                         </div>

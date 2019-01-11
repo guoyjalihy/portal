@@ -30,7 +30,4 @@ public class Menu {
 	private Long parent;
 	@Column
 	private int status;
-	@OneToMany
-	@JoinColumn(name = "parent")
-	private List<Menu> subMenus;
 }

@@ -38,7 +38,7 @@ public class LoginController {
 	 */
 	@PostMapping("/login")
 	public String loginPost(UserVO userVO, Model model, HttpSession httpSession) {
-		User user = userService.findByNameAndPassword(userVO);
+		UserVO user = userService.findByNameAndPassword(userVO.getUsername(),userVO.getPassword());
 		if (user != null) {
 			httpSession.setAttribute("user", userVO);
 			return "redirect:home";
@@ -79,6 +79,8 @@ public class LoginController {
 	@GetMapping("logout")
 	public String logout(HttpSession httpSession) {
 		httpSession.removeAttribute("user");
+		httpSession.removeAttribute("menus");
+		httpSession.removeAttribute("roles");
 		return "login";
 	}
 }

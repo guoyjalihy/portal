@@ -41,7 +41,6 @@ public class MenuController {
 			MenuVO menuVO = menuService.findById(id);
 			model.addAttribute("menuVO",menuVO);
 		}
-		model.addAttribute("menus",menuService.findMenuTree().get(0).getSubMenus());
 		return "menu/menuEdit";
 	}
 

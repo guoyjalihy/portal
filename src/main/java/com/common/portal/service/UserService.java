@@ -24,8 +24,9 @@ public class UserService {
 	@Autowired
 	RoleRepository roleRepository;
 
-	public User findByNameAndPassword(UserVO userVO){
-		return userRepository.findByUsernameAndPassword(userVO.getUsername(),userVO.getPassword());
+	public UserVO findByNameAndPassword(String username,String password){
+		User user = userRepository.findByUsernameAndPassword(username,password);
+		return buildUserVO(user);
 	}
 
 	public List<UserVO> findAll() {
@@ -53,6 +54,9 @@ public class UserService {
 	}
 
 	private UserVO buildUserVO(User user) {
+		if (user == null ){
+			return null;
+		}
 		UserVO userVO = new UserVO();
 		userVO.setId(user.getId());
 		userVO.setUsername(user.getUsername());
