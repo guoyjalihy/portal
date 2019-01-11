@@ -81,6 +81,7 @@ public class LoginController {
 		httpSession.removeAttribute("user");
 		httpSession.removeAttribute("menus");
 		httpSession.removeAttribute("roles");
+		httpSession.removeAttribute("currMenu");
 		return "login";
 	}
 }

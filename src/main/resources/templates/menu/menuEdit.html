@@ -45,7 +45,7 @@
                                 <select name="image" id="image" class="form-control" >
                                     <option value="" th:selected="${image==null}">--请选择菜单样式--</option>
                                     <option value="fa-desktop" th:selected="${menuVO}?${menuVO.image eq 'fa-desktop'}:false">--fa-desktop--</option>
-                                    <option value="fa-bar-chart-o" th:selected="${menuVO}?${menuVO.image eq 'fa-bar-chart-o'}:false">--fa-desktop--</option>
+                                    <option value="fa-bar-chart-o" th:selected="${menuVO}?${menuVO.image eq 'fa-bar-chart-o'}:false">--fa-bar-chart-o'--</option>
                                     <option value="fa-envelope" th:selected="${menuVO}?${menuVO.image eq 'fa-envelope'}:false">--fa-envelope--</option>
                                     <option value="fa-edit" th:selected="${menuVO}?${menuVO.image eq 'fa-edit'}:false">--fa-edit--</option>
                                     <option value="fa-files-o" th:selected="${menuVO}?${menuVO.image eq 'fa-files-o'}:false">--fa-files-o--</option>
@@ -70,11 +70,11 @@
 
                         <div class="hr-line-dashed"></div>
 
-                        <div id="parentDIV" class="form-group" style="display: none"><label class="col-sm-2 control-label">上一级菜单：</label>
+                        <div id="parentDIV" class="form-group" ><label class="col-sm-2 control-label">上一级菜单：</label>
                             <div class="col-sm-10">
                                 <select name="parent" id="parent" class="form-control" >
                                     <option value="0" th:selected="${parent==null}">--请选择上一级菜单--</option>
-                                    <option th:each="menu : ${menus}" th:value="${menu.id}" th:text="${menu.name}" th:selected="${menuVO}?${menu.id== menuVO.parent}:false">菜单</option>
+                                    <option th:each="menu : ${session.menus}" th:value="${menu.id}" th:text="${menu.name}" th:selected="${menuVO}?${menu.id== menuVO.parent}:false">菜单</option>
                                 </select>
                             </div>
                         </div>

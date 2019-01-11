@@ -54,14 +54,15 @@ public class SessionFilter implements Filter {
 
         //维护当前访问菜单信息到session
         String menuId = request.getParameter("menuId");
-        if (menuId != null){
-            MenuVO menuVO = menuService.findById(Long.valueOf(menuId));
-            if (menuVO == null){
-                log.error("menu is null. menuId:{}",menuId);
-                return;
-            }
-            request.getSession().setAttribute("currMenu", menuVO);
+        if (menuId == null){
+            menuId = 1+"";
         }
+        MenuVO menuVO = menuService.findById(Long.valueOf(menuId));
+        if (menuVO == null){
+            log.error("menu is null. menuId:{}",menuId);
+            return;
+        }
+        request.getSession().setAttribute("currMenu", menuVO);
         filterChain.doFilter(servletRequest,servletResponse);
     }
 

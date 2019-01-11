@@ -50,7 +50,7 @@ public class PrivilegeJSONController {
 
 	@RequestMapping(value = "/list/{roleId}")
 	@ResponseBody
-	public List<MenuVO> list(@PathVariable("roleId")Long roleId){
+	public List<MenuVO> list(@PathVariable Long roleId){
 		List<Long> menuIds = privilegeService.findMenuIdsByRoleId(roleId);
 		if (CollectionUtils.isEmpty(menuIds)){
 			return new ArrayList<>();

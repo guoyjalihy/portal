@@ -40,7 +40,7 @@ public class HomeController {
 		}
 		List<RoleVO> roles = roleService.findAll();
 		httpSession.setAttribute("roles",roles);
-		return "layout";
+		return "dashboard";
 	}
 
 	@GetMapping("/dashboard")
