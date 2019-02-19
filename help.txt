@@ -1,0 +1,2 @@
+1.安装zabbix，参考 https://www.zabbix.com/documentation/3.4/zh/manual/installation/install
+2.安装webssh,参考 https://github.com/huashengdun/webssh
