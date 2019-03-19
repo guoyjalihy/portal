@@ -20,7 +20,7 @@ public class PortalApplication implements CommandLineRunner {
 	private AlarmSocketServer alarmSocketServer;
 	@Override
 	public void run(String... args) throws Exception{
-		alarmSocketServer.startServer(portArr);
+//		alarmSocketServer.startServer(portArr);
 	}
 
 	public static void main(String[] args) {

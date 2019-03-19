@@ -13,7 +13,7 @@ public class RPCController {
 
     @RequestMapping("/rpc")
     public String rpc(){
-        System.out.printf(zabbixApi.eventGetAll().toString());
+        System.out.printf(zabbixApi.problemGetAll().toString());
         return "success";
     }
 }

@@ -17,4 +17,5 @@ public class UserVO {
 	private Long roleId;
 	private String roleName;
 	private String image;
+	private String ip;
 }

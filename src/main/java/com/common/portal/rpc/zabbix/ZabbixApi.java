@@ -11,11 +11,15 @@ public interface ZabbixApi {
 
     List<HostVO> hostGetAll();
 
+    List<EventVO> problemGetAll();
+
     List<EventVO> eventGetAll();
 
     JSONObject call(Request request);
 
     void destroy();
 
-    List<EventVO> eventGetByQuery(EventVO eventVO) throws ParseException;
+    List<EventVO> problemGetByQuery(EventVO eventVO) throws ParseException;
+
+    List<EventVO> eventGetByQuery(EventVO eventVO);
 }

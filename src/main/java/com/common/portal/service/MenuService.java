@@ -1,15 +1,19 @@
 package com.common.portal.service;
 
+import com.common.portal.aop.OperationLog;
+import com.common.portal.aop.OperationType;
 import com.common.portal.controller.vo.MenuVO;
 import com.common.portal.dao.MenuRepository;
-import com.common.portal.dao.PrivilegeRepository;
 import com.common.portal.entity.Menu;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -55,6 +59,7 @@ public class MenuService {
 		return menuVO;
 	}
 
+    @OperationLog(operationType = OperationType.ADD,content = "菜单")
 	public void saveOrUpdate(MenuVO menuVO) {
 		menuRepository.saveAndFlush(build(menuVO));
 	}
@@ -107,7 +112,7 @@ public class MenuService {
 		return result;
 	}
 
-
+    @OperationLog(operationType = OperationType.DELETE,content = "菜单")
 	public void deleteAllByParentOrId(Long id) {
 		menuRepository.deleteAllByParentOrId(id,id);
 	}

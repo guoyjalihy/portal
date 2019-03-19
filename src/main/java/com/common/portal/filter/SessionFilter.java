@@ -1,5 +1,6 @@
 package com.common.portal.filter;
 
+import com.common.portal.aop.WebUtils;
 import com.common.portal.controller.vo.MenuVO;
 import com.common.portal.controller.vo.UserVO;
 import com.common.portal.entity.User;
@@ -35,8 +36,11 @@ public class SessionFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+
         HttpServletRequest request = (HttpServletRequest)servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
+        WebUtils.setRequest(request);
+
         //判断session
         String currURI = request.getRequestURI();
         for (String uri : unFilterURIList){

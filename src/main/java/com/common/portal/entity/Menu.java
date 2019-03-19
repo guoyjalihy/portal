@@ -6,7 +6,6 @@ import lombok.ToString;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "menu")

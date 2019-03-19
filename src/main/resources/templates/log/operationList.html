@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorator="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>日志管理</title>
+</head>
+<body>
+<div layout:fragment="main">
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>日志管理</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a>操作日志</a>
+                </li>
+                <li class="active">
+                    <strong>日志管理</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+
+    <div id="mainDiv" class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>搜索&amp;操作</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content" style="display: block;">
+                        <form action="/operationLog/security/list_0_0_0" method="post">
+                            <div class="row">
+                                <div class="col-sm-2 m-b-xs">
+                                    <input id="id" name="content" placeholder="内容" class="form-control"
+                                           type="text"
+                                           th:value="${logVO}?${logVO.content}:''"/>
+                                </div>
+                                <div class="col-sm-1 m-b-xs">
+                                    <button class="btn btn-primary btn-block" type="submit"><i
+                                            class="fa fa-search"></i>&nbsp;&nbsp;&nbsp;&nbsp;<strong>搜索</strong>
+                                    </button>
+                                </div>
+                                <div class="col-sm-1 m-b-xs">
+                                    <button onclick="bak('operation')" class="btn btn-primary btn-block" type="button"><i
+                                            class="fa"></i>&nbsp;&nbsp;&nbsp;&nbsp;<strong>备份</strong>
+                                    </button>
+                                    <input id="logPath" th:value="${logConfig}?${logConfig.logPath}:null" type="hidden">
+                                </div>
+
+                                <div class="col-sm-1 m-b-xs">
+                                    <a data-toggle="modal" class="btn btn-primary" href="#remote-form">远程输出</a>
+                                </div>
+                                <div id="remote-form" class="modal fade" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div>
+                                                        <h3 class="m-t-none m-b">远程输出信息</h3>
+                                                        <form>
+                                                            <div><label>远程日志服务器IP</label> <input type="text" id="originIP" name="originIP" class="form-control" th:value="${logConfig}?${logConfig.originIP}:null"/></div>
+                                                            <div><label>远程服务器日志备份地址</label> <input type="text" id="originLogPath" name="originLogPath" class="form-control" th:value="${logConfig}?${logConfig.originLogPath}:null"/></div>
+                                                            <div><label>远程服务器登录用户名</label> <input type="text" id="originLoginName" name="originLoginName" class="form-control" th:value="${logConfig}?${logConfig.originLoginName}:null"/></div>
+                                                            <div><label>远程服务器登录密码</label> <input type="password" id="originPassword" name="originPassword" placeholder="Password" class="form-control"/></div>
+                                                            <div>
+                                                                <button id="remoteButton" class="btn btn-sm btn-primary pull-right m-t-n-xs" type="button"><strong>执行</strong></button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>日志列表</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="table-responsive">
+                            <table id="usertable" class=" table table-hover" data-page-size="10" th:fragment="table">
+                                <thead>
+                                <tr>
+                                    <th width="5%">序号</th>
+                                    <th width="10%">内容</th>
+                                    <th width="50%">详情</th>
+                                    <th width="5%">操作用户</th>
+                                    <th width="10%">操作用户IP</th>
+                                    <th width="15%">操作时间</th>
+                                    <th width="5%">结果</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="operationLog : ${logs}">
+                                    <td th:text="${operationLog.id}">Onions</td>
+                                    <td th:text="|${operationLog.operationType} ${operationLog.content}|">Onions</td>
+                                    <td th:text="${operationLog.detail}">Onions</td>
+                                    <td th:text="${operationLog.user.username}">Onions</td>
+                                    <td th:text="${operationLog.user.ip}">Onions</td>
+                                    <td th:text="${operationLog.createTime}">Onions</td>
+                                    <td th:if="${operationLog.result eq 1}" th:text="成功">Onions</td>
+                                    <td th:if="${operationLog.result ne 1}" th:text="失败">Onions</td>
+                                </tr>
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <td colspan="7">
+                                        <ul id="pageHTML" class="pagination pull-right"></ul>
+                                    </td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        var pageHTML = [[${pageHTML}]];
+        $(document).ready(function () {
+            $("#pageHTML").html(pageHTML);
+
+            $("#remoteButton").click(function () {
+                var originIP = $("#originIP").val();
+                var originLogPath = $("#originLogPath").val();
+                var originLoginName = $("#originLoginName").val();
+                var originPassword = $("#originPassword").val();
+                if (originIP == null || originIP == ""){
+                    alert("请输入远程日志服务器IP！");
+                    return false;
+                }
+                if (originLogPath == null || originLogPath == ""){
+                    alert("请输入远程服务器日志备份地址！");
+                    return false;
+                }
+                if (originLoginName == null || originLoginName == ""){
+                    alert("请输入远程服务器登录用户名！");
+                    return false;
+                }
+                if (originPassword == null || originPassword == ""){
+                    alert("请输入远程服务器登录密码！");
+                    return false;
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "/log/remote/operation",
+                    dataType: "text",
+                    data:{
+                        "originIP":originIP,
+                        "originLogPath":originLogPath,
+                        "originLoginName":originLoginName,
+                        "originPassword":originPassword
+                    },
+                    success: function (msg) {
+                        if (msg == "SUCCESS"){
+                            swal("执行成功!", "日志已远程输出到日志服务器!", "success");
+                        }else{
+                            swal("执行失败!", "具体原因请查看日志!", "error");
+                        }
+                    },
+                    error: function () {
+                        alert("error");
+                    }
+                });
+            })
+
+        });
+
+        function bak(type){
+            var logPath = $("#logPath").val();
+            swal({
+                    title: "备份日志",
+                    text: "日志将备份到"+logPath +"路径下",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "是，确认!",
+                    cancelButtonText: "否，取消",
+                    closeOnConfirm: false,
+                    closeOnCancel: false },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        $.ajax({
+                            type: "POST",
+                            url: "/log/bak/" + type,
+                            dataType: "text",
+                            success: function (msg) {
+                                if (msg == "SUCCESS"){
+                                    swal("执行成功!", "日志已备份!", "success");
+                                }else{
+                                    swal("执行失败!", "具体原因请查看日志!", "error");
+                                }
+                            },
+                            error: function () {
+                            }
+                        });
+                    } else {
+                        swal("已取消", "数据安全 :)", "error");
+                    }
+                });
+        }
+    </script>
+</div>
+</body>
+</html>

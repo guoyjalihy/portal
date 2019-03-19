@@ -1,5 +1,7 @@
 package com.common.portal.service;
 
+import com.common.portal.aop.OperationLog;
+import com.common.portal.aop.OperationType;
 import com.common.portal.controller.vo.RoleVO;
 import com.common.portal.controller.vo.UserVO;
 import com.common.portal.dao.RoleRepository;
@@ -21,7 +23,7 @@ public class RoleService {
 
 	@Autowired
 	RoleRepository roleRepository;
-
+	@OperationLog(operationType = OperationType.ADD,content = "角色")
 	public boolean saveOrUpdate(RoleVO roleVO){
 		Role result = build(roleVO);
 		roleRepository.saveAndFlush(result);
@@ -69,6 +71,7 @@ public class RoleService {
 		return result;
 	}
 
+	@OperationLog(operationType = OperationType.DELETE,content = "角色")
 	public void delById(Long id) {
 		roleRepository.deleteById(id);
 	}

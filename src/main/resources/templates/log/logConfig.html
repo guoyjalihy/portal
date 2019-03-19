@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorator="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>日志设置</title>
+</head>
+<body>
+<div class="wrapper wrapper-content animated fadeInRight" layout:fragment="main">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5 th:text="日志设置"></h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <form id="formTag" action="/log/config/modify" method="POST" class="form-horizontal">
+
+                        <div class="form-group"><label class="col-sm-2 control-label">日志保留时间：</label>
+                            <div class="col-sm-10">
+                                <input id="retentionTime" name="retentionTime" placeholder="默认7,单位：天" type="text"
+                                       class="form-control"
+                                       th:value="${logConfigVO}?${logConfigVO.retentionTime}:null"/>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group"><label class="col-sm-2 control-label">日志占用的空间容量：</label>
+                            <div class="col-sm-10">
+                                <input id="spaceCapacity" name="spaceCapacity" placeholder="默认1024,单位：MByte" type="text"
+                                       class="form-control"
+                                       th:value="${logConfigVO}?${logConfigVO.spaceCapacity}:null"/>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group"><label class="col-sm-2 control-label">备份日志本地保存路径：</label>
+                            <div class="col-sm-10">
+                                <input id="logPath" name="logPath" placeholder="默认路径：/omc/log/bak/" type="text"
+                                       class="form-control" th:value="${logConfigVO}?${logConfigVO.logPath}:null"/>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group"><label class="col-sm-2 control-label">远程日志服务器IP：</label>
+                            <div class="col-sm-10">
+                                <input id="originIP" name="originIP" placeholder="默认：localhost" type="text"
+                                       class="form-control" th:value="${logConfigVO}?${logConfigVO.originIP}:null"/>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+
+                        <div class="form-group"><label class="col-sm-2 control-label">远程服务器登录用户名：</label>
+                            <div class="col-sm-10">
+                                <input id="originLoginName" name="originLoginName" placeholder="默认：root" type="text"
+                                       class="form-control"
+                                       th:value="${logConfigVO}?${logConfigVO.originLoginName}:null"/>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+
+                        <div class="form-group"><label class="col-sm-2 control-label">远程服务器日志备份地址：</label>
+                            <div class="col-sm-10">
+                                <input id="originLogPath" name="originLogPath" placeholder="默认路径：/omc/log/bak/"
+                                       type="text" class="form-control"
+                                       th:value="${logConfigVO}?${logConfigVO.originLogPath}:null"/>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-2">
+                                <button id="submitButton" class="btn btn-primary" type="submit">&nbsp;&nbsp;&nbsp;&nbsp;提&nbsp;&nbsp;&nbsp;&nbsp;交&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

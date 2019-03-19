@@ -1,5 +1,8 @@
 package com.common.portal.controller;
 
+import com.common.portal.aop.OperationLog;
+import com.common.portal.aop.OperationType;
+import com.common.portal.aop.WebUtils;
 import com.common.portal.controller.vo.UserVO;
 import com.common.portal.entity.User;
 import com.common.portal.service.UserService;
@@ -37,10 +40,13 @@ public class LoginController {
 	 * @return
 	 */
 	@PostMapping("/login")
+	@OperationLog(operationType = OperationType.LOGIN,content = "登入")
 	public String loginPost(UserVO userVO, Model model, HttpSession httpSession) {
 		UserVO user = userService.findByNameAndPassword(userVO.getUsername(),userVO.getPassword());
 		if (user != null) {
-			httpSession.setAttribute("user", userVO);
+			user.setIp(WebUtils.getRequest().getRemoteAddr());
+			httpSession.setAttribute("user", user);
+			userService.saveOrUpdate(user);
 			return "redirect:home";
 		} else {
 			model.addAttribute("error", "用户名或密码错误，请重新登录！");
@@ -77,6 +83,7 @@ public class LoginController {
 	 * @return
 	 */
 	@GetMapping("logout")
+	@OperationLog(operationType = OperationType.LOGOUT,content = "注销")
 	public String logout(HttpSession httpSession) {
 		httpSession.removeAttribute("user");
 		httpSession.removeAttribute("menus");

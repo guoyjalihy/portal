@@ -64,7 +64,7 @@ public class DefaultZabbixApi implements ZabbixApi {
     }
 
     @Override
-    public List<EventVO> eventGetByQuery(EventVO eventVO) throws ParseException {
+    public List<EventVO> problemGetByQuery(EventVO eventVO) throws ParseException {
         RequestBuilder requestBuilder = RequestBuilder.newBuilder().method("problem.get");
         requestBuilder.paramEntry("sortfield", new String[] { "eventid"});
         requestBuilder.paramEntry("sortorder", "DESC");
@@ -77,6 +77,39 @@ public class DefaultZabbixApi implements ZabbixApi {
         }
         if (!StringUtils.isEmpty(eventVO.getTimeTill())){
             requestBuilder.paramEntry("time_till", format.parse(eventVO.getTimeTill()).getTime()/1000);
+        }
+
+        Request request = requestBuilder.build();
+        JSONObject jsonObject = call(request);
+        JSONArray jsonArray = jsonObject.getJSONArray("result");
+        List<EventVO> result = jsonArray.toJavaList(EventVO.class);
+        logger.info("problemGetByQuery,result:{}",result);
+
+        //关联主机
+        result.forEach(event -> {
+            event.setHost(getHostByObjectAndObjectId(event.getObject(),event.getObjectId()));
+        });
+        return result;
+    }
+
+    @Override
+    public List<EventVO> eventGetByQuery(EventVO eventVO){
+        RequestBuilder requestBuilder = RequestBuilder.newBuilder().method("event.get");
+        requestBuilder.paramEntry("sortfield", new String[] { "eventid"});
+        requestBuilder.paramEntry("sortorder", "DESC");
+        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+        if (!StringUtils.isEmpty(eventVO.getHostId())){
+            requestBuilder.paramEntry("hostids", eventVO.getHostId());
+        }
+        try {
+            if (!StringUtils.isEmpty(eventVO.getTimeFrom())){
+                requestBuilder.paramEntry("time_from", format.parse(eventVO.getTimeFrom()).getTime()/1000);
+            }
+            if (!StringUtils.isEmpty(eventVO.getTimeTill())){
+                requestBuilder.paramEntry("time_till", format.parse(eventVO.getTimeTill()).getTime()/1000);
+            }
+        }catch (ParseException e){
+            logger.error("parse error.",e);
         }
 
         Request request = requestBuilder.build();
@@ -121,9 +154,28 @@ public class DefaultZabbixApi implements ZabbixApi {
     }
 
     @Override
-    public List<EventVO> eventGetAll() {
+    public List<EventVO> problemGetAll() {
         Request request = RequestBuilder.newBuilder()
                 .method("problem.get")
+                .paramEntry("sortfield", new String[] { "eventid"})
+                .paramEntry("sortorder", "DESC")
+                .build();
+        JSONObject jsonObject = call(request);
+        JSONArray jsonArray = jsonObject.getJSONArray("result");
+        List<EventVO> result = jsonArray.toJavaList(EventVO.class);
+        logger.info("problemGetAll,result:{}",result);
+
+        //关联主机
+        result.forEach(eventVO -> {
+            eventVO.setHost(getHostByObjectAndObjectId(eventVO.getObject(),eventVO.getObjectId()));
+        });
+        return result;
+    }
+
+    @Override
+    public List<EventVO> eventGetAll() {
+        Request request = RequestBuilder.newBuilder()
+                .method("event.get")
                 .paramEntry("sortfield", new String[] { "eventid"})
                 .paramEntry("sortorder", "DESC")
                 .build();

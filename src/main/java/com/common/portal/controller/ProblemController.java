@@ -14,7 +14,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/event")
-public class EventController {
+public class ProblemController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     ZabbixApi zabbixApi;
@@ -24,7 +24,7 @@ public class EventController {
 
     @RequestMapping("/list")
     public String list(Model model){
-        List<EventVO> events = zabbixApi.eventGetAll();
+        List<EventVO> events = zabbixApi.problemGetAll();
         model.addAttribute("events",events);
         model.addAttribute("zabbixIp",zabbixIp);
         model.addAttribute("hosts",zabbixApi.hostGetAll());
@@ -35,7 +35,7 @@ public class EventController {
     public String search(Model model,EventVO eventVO){
         List<EventVO> events = null;
         try {
-            events = zabbixApi.eventGetByQuery(eventVO);
+            events = zabbixApi.problemGetByQuery(eventVO);
         } catch (Exception e) {
             logger.error("EventController search error.",e);
         }

@@ -1,5 +1,7 @@
 package com.common.portal.service;
 
+import com.common.portal.aop.OperationLog;
+import com.common.portal.aop.OperationType;
 import com.common.portal.controller.vo.UserVO;
 import com.common.portal.dao.RoleRepository;
 import com.common.portal.dao.UserRepository;
@@ -62,9 +64,11 @@ public class UserService {
 		userVO.setUsername(user.getUsername());
 		userVO.setPassword(user.getPassword());
 		userVO.setRoleId(user.getRoleId());
+		userVO.setIp(user.getIp());
 		return userVO;
 	}
 
+	@OperationLog(operationType = OperationType.ADD,content = "用户")
 	public void saveOrUpdate(UserVO userVO) {
 		userRepository.saveAndFlush(build(userVO));
 	}
@@ -75,10 +79,11 @@ public class UserService {
 		result.setUsername(userVO.getUsername());
 		result.setId(userVO.getId());
 		result.setRoleId(userVO.getRoleId());
+		result.setIp(userVO.getIp());
 		return result;
 	}
 
-
+    @OperationLog(operationType = OperationType.DELETE,content = "用户")
 	public void delById(Long id) {
 		userRepository.deleteById(id);
 	}
@@ -90,6 +95,9 @@ public class UserService {
 	}
 
 	public UserVO findById(Long id) {
+	    if (id == null){
+	        return null;
+        }
 		User user = userRepository.findById(id).get();
 		if(user == null){
 			return null;

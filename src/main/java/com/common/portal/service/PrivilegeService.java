@@ -1,5 +1,7 @@
 package com.common.portal.service;
 
+import com.common.portal.aop.OperationLog;
+import com.common.portal.aop.OperationType;
 import com.common.portal.dao.PrivilegeRepository;
 import com.common.portal.entity.Privilege;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ public class PrivilegeService {
     @Autowired
     PrivilegeRepository privilegeRepository;
 
+    @OperationLog(operationType = OperationType.ADD,content = "权限")
     public void saveAll(Long roleId,List<Long> menuIds){
         if (CollectionUtils.isEmpty(menuIds)){
             return;
